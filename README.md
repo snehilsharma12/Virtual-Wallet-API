@@ -1,16 +1,8 @@
-**Important: Don't forget to update the [Candidate README](#candidate-readme) section**
 
-# Real-time Transaction Challenge
-
-## Overview
-
-Welcome to Current's take-home technical assessment for backend engineers! We appreciate you taking the time to complete this, and we're excited to see what you come up with.
-
-Today, you will be building a small but critical component of Current's core banking enging: real-time balance calculation through [event-sourcing](https://martinfowler.com/eaaDev/EventSourcing.html).
 
 ## Schema
 
-The [included service.yml](service.yml) is the OpenAPI 3.0 schema to a service we would like you to create and host.
+The [included service.yml](service.yml) is the OpenAPI 3.0 schema.
 
 ## Details
 
@@ -20,27 +12,11 @@ The service accepts two types of transactions:
 
 2. Authorizations: Conditionally remove money from a user (debit)
 
-Every load or authorization PUT should return the updated balance following the transaction. Authorization declines should be saved, even if they do not impact balance calculation.
-
-You may use any technologies to support the service. We do not expect you to use a persistent store (you can you in-memory object), but you can if you want. We should be able to bootstrap your project locally to test.
-
-## Expectations
-
-We are looking for attention in the following areas:
-
-1. Do you accept all requests supported by the schema, in the format described?
-
-2. Do your responses conform to the prescribed schema?
-
-3. Does the authorizations endpoint work as documented in the schema?
-
-4. Do you have unit and integrations test on the functionality?
-
-# Candidate README
+Every load or authorization PUT returns the updated balance following the transaction. Authorization declines are saved, even if they do not impact balance calculation.
 
 ## Bootstrap instructions
 
-Replace this: To run this server locally, do the following in the root directory:  
+To run this server locally, do the following in the root directory:  
 `mvn clean install`  
 `mvn spring-boot:run`
 
@@ -52,9 +28,7 @@ Replace this: To run this server locally, do the following in the root directory
 
 - I made some tests for the enpoints to test their functionality. For load I check the expected response on the balance variables. Similarly, for authorization, I perform a load and then perform an authorization. For ping, I check the formatting to match date-time format. Had to use regex to get there.
 
-- I wasn't sure what the instructions meant about "saving the authorization declines". But i assumed that a log was needed? I really tried to get log4j to create a log file but for some reason it just wouldn't find the config file (same with logback). So, at the very least it logs the declines on the console. In general, the decline responses work as per schema.
-
-## Bonus: Deployment considerations
+## Future work considerations for deployment
 
 - I would firstly containerize the application using Docker. This gives it the flexibility to be deployed in any environment.
 
@@ -78,9 +52,6 @@ $$$$$$$  |$$ |  $$ |\$$$$$$$\ $$ |  $$ |$$ |$$ |
 
 ```
 
-## License
-
-At CodeScreen, we strongly value the integrity and privacy of our assessments. As a result, this repository is under exclusive copyright, which means you **do not** have permission to share your solution to this test publicly (i.e., inside a public GitHub/GitLab repo, on Reddit, etc.). <br>
 
 ## Submitting your solution
 
