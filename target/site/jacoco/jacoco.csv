@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+CodeScreen_efe2rjsh,dev.codescreen,Type.Ping,73,10,14,0,0,4,11,3,4,3
+CodeScreen_efe2rjsh,dev.codescreen,Type,3,0,0,0,1,0,1,0,1,0
+CodeScreen_efe2rjsh,dev.codescreen,Type.LoadRequest,163,18,30,0,4,7,24,3,9,3
+CodeScreen_efe2rjsh,dev.codescreen,Main,8,0,0,0,3,0,2,0,2,0
+CodeScreen_efe2rjsh,dev.codescreen,Type.Amount,103,87,21,9,0,14,20,7,5,7
+CodeScreen_efe2rjsh,dev.codescreen,Type.AuthorizationResponse,200,27,38,0,3,10,28,5,9,5
+CodeScreen_efe2rjsh,dev.codescreen,Type.LoadResponse,160,21,30,0,3,8,23,4,8,4
+CodeScreen_efe2rjsh,dev.codescreen,Type.AuthorizationRequest,163,18,30,0,4,7,24,3,9,3
+CodeScreen_efe2rjsh,dev.codescreen,Type.Error,129,0,22,0,5,0,20,0,9,0
+CodeScreen_efe2rjsh,dev.codescreen,Type.ResponseCode,0,15,0,0,0,2,0,1,0,1
+CodeScreen_efe2rjsh,dev.codescreen,Controller,75,165,7,5,16,29,6,5,0,5
+CodeScreen_efe2rjsh,dev.codescreen,Type.DebitCredit,0,15,0,0,0,2,0,1,0,1

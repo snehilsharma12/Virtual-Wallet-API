@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Type.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CodeScreen_efe2rjsh</a> &gt; <a href="index.source.html" class="el_package">dev.codescreen</a> &gt; <span class="el_source">Type.java</span></div><h1>Type.java</h1><pre class="source lang-java linenums">/**
+ * Type class that defines the various objects that are needed for schema.
+ * 
+ * @author: Snehil Sharma (snehilsharma12@gmail.com)
+ * 
+ */
+
+package dev.codescreen;
+
+import lombok.Data;
+
+<span class="nc" id="L12">public class Type {</span>
+
+<span class="pc bpc" id="L14" title="21 of 30 branches missed.">    @Data</span>
+    public static class Amount {
+<span class="fc" id="L16">        private String amount;</span>
+<span class="fc" id="L17">        private String currency;</span>
+<span class="fc" id="L18">        private DebitCredit debitOrCredit;</span>
+
+<span class="fc" id="L20">        public Amount() {</span>
+<span class="fc" id="L21">            amount = &quot;0&quot;;</span>
+<span class="fc" id="L22">            currency = &quot;USD&quot;;</span>
+<span class="fc" id="L23">            debitOrCredit = DebitCredit.CREDIT;</span>
+<span class="fc" id="L24">        }</span>
+
+<span class="fc" id="L26">        public Amount(String amount, String currency, DebitCredit debitOrCredit) {</span>
+
+<span class="fc" id="L28">            this.amount = amount;</span>
+<span class="fc" id="L29">            this.currency = currency;</span>
+<span class="fc" id="L30">            this.debitOrCredit = debitOrCredit;</span>
+
+<span class="fc" id="L32">        }</span>
+    }
+
+<span class="fc" id="L35">    public enum DebitCredit {</span>
+<span class="fc" id="L36">        DEBIT, CREDIT</span>
+    }
+
+<span class="pc bnc" id="L39" title="All 14 branches missed.">    @Data</span>
+    public static class Ping {
+<span class="fc" id="L41">        private String serverTime;</span>
+
+<span class="fc" id="L43">        public Ping() {</span>
+<span class="fc" id="L44">        };</span>
+    }
+
+<span class="nc bnc" id="L47" title="All 22 branches missed.">    @Data</span>
+    public class Error {
+<span class="nc" id="L49">        private String message;</span>
+<span class="nc" id="L50">        private String code;</span>
+
+<span class="nc" id="L52">        public Error() {</span>
+<span class="nc" id="L53">        }</span>
+    }
+
+<span class="nc bnc" id="L56" title="All 30 branches missed.">    @Data</span>
+    public static class AuthorizationRequest {
+<span class="fc" id="L58">        private String userId;</span>
+<span class="nc" id="L59">        private String messageId;</span>
+<span class="fc" id="L60">        private Amount transactionAmount;</span>
+
+<span class="nc" id="L62">        public AuthorizationRequest() {</span>
+<span class="nc" id="L63">        }</span>
+
+<span class="fc" id="L65">        public AuthorizationRequest(String userId, String messageId, Amount transactionAmount) {</span>
+<span class="fc" id="L66">            this.userId = userId;</span>
+<span class="fc" id="L67">            this.messageId = messageId;</span>
+<span class="fc" id="L68">            this.transactionAmount = transactionAmount;</span>
+<span class="fc" id="L69">        }</span>
+    }
+
+<span class="nc bnc" id="L72" title="All 30 branches missed.">    @Data</span>
+    public static class LoadRequest {
+<span class="fc" id="L74">        private String userId;</span>
+<span class="nc" id="L75">        private String messageId;</span>
+<span class="fc" id="L76">        private Amount transactionAmount;</span>
+
+<span class="nc" id="L78">        public LoadRequest() {</span>
+<span class="nc" id="L79">        }</span>
+
+<span class="fc" id="L81">        public LoadRequest(String userId, String messageId, Amount transactionAmount) {</span>
+<span class="fc" id="L82">            this.userId = userId;</span>
+<span class="fc" id="L83">            this.messageId = messageId;</span>
+<span class="fc" id="L84">            this.transactionAmount = transactionAmount;</span>
+
+<span class="fc" id="L86">        }</span>
+    }
+
+<span class="nc bnc" id="L89" title="All 38 branches missed.">    @Data</span>
+    public static class AuthorizationResponse {
+<span class="fc" id="L91">        private String userId;</span>
+<span class="fc" id="L92">        private String messageId;</span>
+<span class="fc" id="L93">        private ResponseCode responseCode;</span>
+<span class="fc" id="L94">        private Amount balance;</span>
+
+<span class="nc" id="L96">        public AuthorizationResponse() {</span>
+<span class="nc" id="L97">        }</span>
+
+<span class="fc" id="L99">        public AuthorizationResponse(String userId, String messageId, ResponseCode responseCode, Amount balance) {</span>
+<span class="fc" id="L100">            this.userId = userId;</span>
+<span class="fc" id="L101">            this.messageId = messageId;</span>
+<span class="fc" id="L102">            this.responseCode = responseCode;</span>
+<span class="fc" id="L103">            this.balance = balance;</span>
+<span class="fc" id="L104">        }</span>
+    }
+
+<span class="nc bnc" id="L107" title="All 30 branches missed.">    @Data</span>
+    public static class LoadResponse {
+<span class="fc" id="L109">        private String userId;</span>
+<span class="fc" id="L110">        private String messageId;</span>
+<span class="fc" id="L111">        private Amount balance;</span>
+
+<span class="nc" id="L113">        public LoadResponse() {</span>
+<span class="nc" id="L114">        }</span>
+
+<span class="fc" id="L116">        public LoadResponse(String userId, String messageId, Amount balance) {</span>
+
+<span class="fc" id="L118">            this.userId = userId;</span>
+<span class="fc" id="L119">            this.messageId = messageId;</span>
+<span class="fc" id="L120">            this.balance = balance;</span>
+
+<span class="fc" id="L122">        }</span>
+
+    }
+
+<span class="fc" id="L126">    public enum ResponseCode {</span>
+<span class="fc" id="L127">        APPROVED, DECLINED</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Controller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CodeScreen_efe2rjsh</a> &gt; <a href="index.source.html" class="el_package">dev.codescreen</a> &gt; <span class="el_source">Controller.java</span></div><h1>Controller.java</h1><pre class="source lang-java linenums">/**
+ * REST controller class that processes and handles the endpoints.
+ * 
+ * @author: Snehil Sharma (snehilsharma12@gmail.com)
+ */
+
+package dev.codescreen;
+
+import dev.codescreen.Type.Ping;
+import dev.codescreen.Type.AuthorizationResponse;
+import dev.codescreen.Type.LoadResponse;
+import dev.codescreen.Type.LoadRequest;
+import dev.codescreen.Type.DebitCredit;
+import dev.codescreen.Type.ResponseCode;
+import dev.codescreen.Type.Amount;
+import dev.codescreen.Type.AuthorizationRequest;
+
+import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+@RestController
+<span class="fc" id="L28">public class Controller {</span>
+
+<span class="fc" id="L30">        private static final Logger logger = LogManager.getLogger(Controller.class);</span>
+
+        // datastructure to hold all the userId and associated balance
+<span class="fc" id="L33">        private static Map&lt;String, Amount&gt; balances = new HashMap&lt;&gt;();</span>
+
+        /**
+         * Processes the ping request and returns the current date-time
+         * 
+         * @return = returns the current date-time
+         */
+        @GetMapping(&quot;/ping&quot;)
+        public Ping ping() {
+
+<span class="fc" id="L43">                Ping ping = new Ping();</span>
+
+<span class="fc" id="L45">                ping.setServerTime(LocalDateTime.now().toString());</span>
+
+<span class="fc" id="L47">                return ping;</span>
+        }
+
+        /**
+         * Processes the authorizationRequest and returns an authorizationResponse.
+         * 
+         * @param messageId = the message ID extracted from the path
+         * @param request   = the AuthorizationRequest object parsed from the request
+         *                  body
+         * @return = returns the AuthorizationResponse. {userID, messageID,
+         *         APPROVED/DENIED, balance=&gt;Amount}
+         */
+        @PutMapping(&quot;/authorization/{messageId}&quot;)
+        public AuthorizationResponse authorizeTransaction(@PathVariable(&quot;messageId&quot;) String messageId,
+                        @RequestBody AuthorizationRequest request) {
+
+                try {
+                        // Get the Amount object for the userId if exists or get a default Amount of 0
+                        // USD
+<span class="fc" id="L66">                        Amount Amtbalance = balances.getOrDefault(request.getUserId(),</span>
+                                        new Amount());
+
+                        // Get the userId's balance numerical value
+<span class="fc" id="L70">                        BigDecimal balance = new BigDecimal(Amtbalance.getAmount());</span>
+
+                        // Get the currency associated
+<span class="fc" id="L73">                        String accountCurrency = Amtbalance.getCurrency();</span>
+
+                        // get the transaction amount object
+<span class="fc" id="L76">                        Amount transactionAmount = request.getTransactionAmount();</span>
+
+                        // check if the transaction currency matches the userId's amount currency
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                        if (!transactionAmount.getCurrency().equals(accountCurrency)) {</span>
+
+<span class="nc" id="L81">                                logger.info(&quot;Transaction declined for user ID: {} and messageId: {}&quot;,</span>
+<span class="nc" id="L82">                                                request.getUserId(),</span>
+<span class="nc" id="L83">                                                request.getMessageId());</span>
+
+                                // return DECLINED if currencies don't match
+<span class="nc" id="L86">                                return new AuthorizationResponse(request.getUserId(), messageId,</span>
+                                                ResponseCode.DECLINED, Amtbalance);
+
+                        }
+
+                        // Get the transaction numerical value
+<span class="fc" id="L92">                        BigDecimal transactionValue = new BigDecimal(request.getTransactionAmount().getAmount());</span>
+
+                        // check if the transaction is DEBIT and if the userID's amount balance is
+                        // enough
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                        if (request.getTransactionAmount().getDebitOrCredit().equals(DebitCredit.DEBIT)</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                                        &amp;&amp; balance.compareTo(transactionValue) &lt; 0) {</span>
+
+<span class="nc" id="L99">                                logger.info(&quot;Transaction declined for user ID: {} and messageId: {}&quot;,</span>
+<span class="nc" id="L100">                                                request.getUserId(),</span>
+<span class="nc" id="L101">                                                request.getMessageId());</span>
+
+                                // return DECLINED if the check fails
+<span class="nc" id="L104">                                return new AuthorizationResponse(request.getUserId(), messageId,</span>
+                                                ResponseCode.DECLINED, Amtbalance);
+                        }
+
+                        // calculate the new balance after processing the authorization
+<span class="fc" id="L109">                        balance = balance.subtract(new BigDecimal(transactionAmount.getAmount()));</span>
+
+                        // create a new amount object with the updated balance
+<span class="fc" id="L112">                        Amount newAmount = new Amount(balance.toString(), accountCurrency, DebitCredit.DEBIT);</span>
+
+                        // update the userId's amount in the balances
+<span class="fc" id="L115">                        balances.put(request.getUserId(), newAmount);</span>
+
+                        // return APPROVED
+<span class="fc" id="L118">                        return new AuthorizationResponse(request.getUserId(), messageId,</span>
+                                        ResponseCode.APPROVED, newAmount);
+
+                }
+
+<span class="nc" id="L123">                catch (Exception e) {</span>
+<span class="nc" id="L124">                        System.out.println(e);</span>
+                }
+
+                // return DECLINED
+<span class="nc" id="L128">                return new AuthorizationResponse(request.getUserId(), messageId,</span>
+                                ResponseCode.DECLINED, new Amount());
+
+        }
+
+        /**
+         * Processes the loadRequest and retuens a loadResponse
+         * 
+         * @param messageId = the message ID extracted from the path
+         * @param request   = the loadRequest object parsed from the request
+         *                  body
+         * @return = returns the loadResponse. {userID, messageID, balance=&gt;Amount}
+         */
+        @PutMapping(&quot;/load/{messageId}&quot;)
+        public LoadResponse loadTransaction(@PathVariable(&quot;messageId&quot;) String messageId,
+                        @RequestBody LoadRequest request) {
+
+                try {
+                        // get the transaction amount object
+<span class="fc" id="L147">                        Amount transactionAmount = request.getTransactionAmount();</span>
+
+                        // get the userId amount abject if exist or get default value = 0 USD
+<span class="fc" id="L150">                        Amount Amtbalance = balances.getOrDefault(request.getUserId(), new Amount());</span>
+
+                        // check if userId exists in balances and if the transaction currency matches
+                        // the userId amount
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">                        if ((balances.containsKey(request.getUserId()))</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                                        &amp;&amp; (!transactionAmount.getCurrency().equals(Amtbalance.getCurrency()))) {</span>
+
+                                // return unchanged balance if transaction currency mismatch
+<span class="nc" id="L158">                                return new LoadResponse(request.getUserId(), messageId, Amtbalance);</span>
+                        }
+
+                        // if userId does not exist =&gt; create new zero amount object in transaction
+                        // currency
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                        else if (!balances.containsKey(request.getUserId())) {</span>
+
+<span class="fc" id="L165">                                Amtbalance = new Amount(BigDecimal.ZERO.toString(), transactionAmount.getCurrency(),</span>
+                                                DebitCredit.CREDIT);
+                        }
+
+                        // get the numerical value of the userId amount balance
+<span class="fc" id="L170">                        BigDecimal balance = new BigDecimal(Amtbalance.getAmount());</span>
+
+                        // get the userId currency
+<span class="fc" id="L173">                        String accountCurrency = Amtbalance.getCurrency();</span>
+
+                        // update the balance after processing the transaction amount
+<span class="fc" id="L176">                        balance = balance.add(new BigDecimal(transactionAmount.getAmount()));</span>
+
+                        // create a new amount object with the updated balance
+<span class="fc" id="L179">                        Amount newAmount = new Amount(balance.toString(), accountCurrency, DebitCredit.CREDIT);</span>
+
+                        // update the userId amount in the balances
+<span class="fc" id="L182">                        balances.put(request.getUserId(), newAmount);</span>
+
+                        // return the updated userId amount
+<span class="fc" id="L185">                        return new LoadResponse(request.getUserId(), messageId, newAmount);</span>
+
+                }
+
+<span class="nc" id="L189">                catch (Exception e) {</span>
+<span class="nc" id="L190">                        System.out.println(e);</span>
+                }
+
+<span class="nc" id="L193">                return new LoadResponse(request.getUserId(), messageId, new Amount());</span>
+
+        }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
