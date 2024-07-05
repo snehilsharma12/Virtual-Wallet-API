@@ -1,4 +1,6 @@
+# About
 
+This projects implements a schema for handling the transactions for a Virtual Wallet. The endpoints supported can Add Money to the user (Currency can be specified) or Charge/Remove money from the user. 
 
 ## Schema
 
