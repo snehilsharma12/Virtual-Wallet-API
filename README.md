@@ -54,9 +54,3 @@ $$$$$$$  |$$ |  $$ |\$$$$$$$\ $$ |  $$ |$$ |$$ |
 
 ```
 
-
-## Submitting your solution
-
-Please push your changes to the `main branch` of this repository. You can push one or more commits. <br>
-
-Once you are finished with the task, please click the `Submit Solution` link on <a href="https://app.codescreen.com/candidate/c6007a5c-16c9-4f6c-9538-260926342829" target="_blank">this screen</a>.
